@@ -7,13 +7,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:yourscooks/core/app_component.dart';
+import 'package:yourscooks/core/env.dart';
 
 import 'package:yourscooks/main.dart';
+import 'package:yourscooks/utility/shared/constants/app_theme.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    // await tester.pumpWidget( AppComponent(themeMode: ,));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

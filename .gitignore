@@ -154,6 +154,8 @@ macos/
 
 # ignore freezed generated file
 .g.dart
+.gen.dart
 .freezed.dart
 *.g.dart
+*.gen.dart
 *.freezed.dart
