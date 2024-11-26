@@ -15,10 +15,6 @@ class Common {
   static bool get isLandscape => Get.width > Get.height;
 }
 
-double pxToDouble({required double px}) {
-  return 0.08333333 * px;
-}
-
 String getRandomNumber() {
   Random random = Random();
   int randomNumber = random.nextInt(10000000);

@@ -1,7 +1,7 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:yourscooks/utility/shared/constants/number_helper.dart';
+import 'package:yourscooks/utility/shared/utils/number_helper.dart';
 
 import '../services/storage_service.dart';
 import 'constants.dart';
@@ -95,21 +95,21 @@ class StyleConstants {
       fontSize: 14,
       fontWeight: FontWeight.w500,
       // color: Colors.black.withOpacity(.6),
-      height: pxToDouble(px: 14.63),
+      height: 14.63.pxToDouble,
       letterSpacing: 1.25,
     ),
     labelMedium: GoogleFonts.outfit(
       fontSize: 12,
       fontWeight: FontWeight.w400,
       // color: Colors.black.withOpacity(.6),
-      height: pxToDouble(px: 14.63),
+      height: 14.63.pxToDouble,
       letterSpacing: 1,
     ),
     labelSmall: GoogleFonts.outfit(
       fontSize: 11,
       fontWeight: FontWeight.w300,
       // color: Colors.black.withOpacity(.6),
-      height: pxToDouble(px: 14.63),
+      height: 14.63.pxToDouble,
       letterSpacing: 1,
     ),
   );
