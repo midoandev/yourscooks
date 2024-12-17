@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:yourscooks/utility/shared/utils/number_helper.dart';
 
 import 'main_logic.dart';
-import 'main_state.dart';
 
 class MainUi extends StatelessWidget {
   static const String namePath = '/main';
@@ -12,66 +12,52 @@ class MainUi extends StatelessWidget {
   MainUi({super.key});
 
   final logic = Get.put(MainLogic());
-  final state = Get
-      .find<MainLogic>()
-      .state;
+  final state = Get.find<MainLogic>().state;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.white,
-        bottomNavigationBar: SafeArea(
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 20).copyWith(bottom: 16),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Get.theme.dividerColor.withOpacity(0.1),
-                    blurRadius: 2,
-                    offset: Offset(1, 3),
-                  ),
-                ],
-                borderRadius: BorderRadius.circular(100),
-                border: Border.all(width: 2, color: Colors.grey.withOpacity(.16))),
+    return Obx(() {
+      return Scaffold(
+          body: state.widgets[state.currentIndex.value],
+          bottomNavigationBar: Container(
+            color: Get.theme.cardColor,
             child: Obx(() {
               return SalomonBottomBar(
-                backgroundColor: Colors.transparent,
+                backgroundColor: Get.theme.cardColor,
+                margin: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                 currentIndex: state.currentIndex.value,
                 onTap: (i) => state.currentIndex.value = i,
                 items: [
-
-                  /// Home
                   SalomonBottomBarItem(
-                    icon: Icon(Icons.home),
+                    icon: Icon(FeatherIcons.home),
                     title: Text("Home"),
-                    selectedColor: Colors.purple,
                   ),
-
-                  /// Likes
+                  // SalomonBottomBarItem(
+                  //   icon: Icon(FeatherIcons.search),
+                  //   title: Text("Search"),
+                  // ),
                   SalomonBottomBarItem(
-                    icon: Icon(Icons.favorite_border),
+                    icon: Icon(FeatherIcons.heart),
                     title: Text("Likes"),
-                    selectedColor: Colors.pink,
                   ),
-
-                  /// Search
                   SalomonBottomBarItem(
-                    icon: Icon(Icons.search),
-                    title: Text("Search"),
-                    selectedColor: Colors.orange,
-                  ),
-
-                  /// Profile
-                  SalomonBottomBarItem(
-                    icon: Icon(Icons.person),
+                    icon: state.userProfile.value == null
+                        ? Icon(Icons.person)
+                        : SizedBox(
+                      width: 32,height: 32,
+                          child: ClipRRect(
+                              borderRadius: 100.circularRadius,
+                              child: Image.network(
+                                state.userProfile.value!.photoURL!,
+                                fit: BoxFit.cover,
+                              )),
+                        ),
                     title: Text("Profile"),
-                    selectedColor: Colors.teal,
                   ),
                 ],
               );
             }),
-          ),
-        ));
+          ));
+    });
   }
 }
