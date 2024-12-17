@@ -159,3 +159,6 @@ macos/
 *.g.dart
 *.gen.dart
 *.freezed.dart
+
+google-services.json
+firebase.json
