@@ -1,6 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:yourscooks/core/dependency_injection.dart';
 
+import '../firebase_options.dart';
 import '../utility/shared/services/storage_service.dart';
 import 'app_component.dart';
 
@@ -10,18 +14,31 @@ class Env {
   static late Env value;
 
   String get appName => dotenv.env['APP_NAME']!;
-  //
-  // String get baseUrl => dotenv.env['BASE_URL']!;
-  // String apiKey = dotenv.env['apiKey']!;
-  // String authDomain = dotenv.env['authDomain']!;
-  // String projectId = dotenv.env['projectId']!;
-  // String storageBucket = dotenv.env['storageBucket']!;
-  // String messagingSenderId = dotenv.env['messagingSenderId']!;
-  // String appId = dotenv.env['appId']!;
-  // String measurementId = dotenv.env['measurementId']!;
-  // String databaseURL = dotenv.env['databaseURL']!;
-  //
-  // EnvType environmentType = EnvType.production;
+
+  String get appIdWeb => dotenv.env['appIdWeb']!;
+
+  String get appIdAndroid => dotenv.env['appIdAndroid']!;
+
+  String get appIdAndroidDev => dotenv.env['appIdAndroidDev']!;
+
+  String get appIdIos => dotenv.env['appIdIos']!;
+
+  String get messagingSenderId => dotenv.env['messagingSenderId']!;
+
+  String get projectId => dotenv.env['projectId']!;
+
+  String get authDomain => dotenv.env['authDomain']!;
+
+  String get storageBucket => dotenv.env['storageBucket']!;
+
+  String get apiKeyWeb => dotenv.env['apiKeyWeb']!;
+
+  String get apiKeyAndroid => dotenv.env['apiKeyAndroid']!;
+
+  String get apiKeyIos => dotenv.env['apiKeyIos']!;
+
+  String get iosBundleId => dotenv.env['iosBundleId']!;
+  EnvType environmentType = EnvType.production;
 
   Env() {
     value = this;
@@ -29,11 +46,16 @@ class Env {
   }
 
   void _init() async {
-    WidgetsFlutterBinding.ensureInitialized();
+    print('appFlavor $appFlavor');
 
+    WidgetsFlutterBinding.ensureInitialized();
+    await DependencyInjection.init();
+
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     final isDark =
         await StorageService.getPrefBool(key: StorageEnum.themeIsDark);
-    print('sdkflmkdlsmf $isDark');
     final themeDefault = isDark ? ThemeMode.dark : ThemeMode.light;
 
     runApp(AppComponent(themeMode: themeDefault));

@@ -1,8 +1,14 @@
 import 'package:get/get.dart';
+import 'package:yourscooks/feature/presentation/login/login_binding.dart';
+import 'package:yourscooks/feature/presentation/login/login_ui.dart';
 import 'package:yourscooks/feature/presentation/main/main_binding.dart';
 import 'package:yourscooks/feature/presentation/main/main_ui.dart';
 import 'package:yourscooks/feature/presentation/splash/splash_binding.dart';
 
+import '../feature/presentation/main/favorite/favorite_binding.dart';
+import '../feature/presentation/main/home/home_binding.dart';
+import '../feature/presentation/main/profile/profile_binding.dart';
+import '../feature/presentation/main/search/search_binding.dart';
 import '../feature/presentation/splash/splash_ui.dart';
 
 class AppRouter {
@@ -15,10 +21,20 @@ class AppRouter {
       binding: SplashBinding(),
     ),
     GetPage(
-      name: MainUi.namePath,
-      page: () => MainUi(),
-      binding: MainBinding(),
-      transition: Transition.fadeIn
+      name: LoginUi.namePath,
+      page: () => LoginUi(),
+      binding: LoginBinding(),
     ),
+    GetPage(
+        name: MainUi.namePath,
+        page: () => MainUi(),
+        bindings: [
+          MainBinding(),
+          HomeBinding(),
+          SearchBinding(),
+          FavoriteBinding(),
+          ProfileBinding(),
+        ],
+        transition: Transition.fadeIn),
   ];
 }

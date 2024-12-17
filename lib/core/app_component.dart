@@ -28,7 +28,7 @@ class AppComponent extends StatelessWidget {
       themeMode: themeMode,
       title: Env.value.appName,
       theme: AppTheme.light,
-      darkTheme:  AppTheme.dark,
+      darkTheme: AppTheme.dark,
     );
 
     return myApp;
