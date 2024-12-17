@@ -21,10 +21,11 @@ class HomeLogic extends GetxController {
     });
   }
 
-  User? get getUser{
+  User? get getUser {
     final logicMain = Get.find<MainLogic>();
     return logicMain.state.userProfile.value;
   }
+
   Future<void> _scrollListener() async {
     // if (state.scrollController.offset >=
     //         state.scrollController.position.maxScrollExtent &&
@@ -66,14 +67,6 @@ class HomeLogic extends GetxController {
       state.isRefresh.value = false;
     });
   }
-
-  Future<bool> loadMore() async {
-    Get.log('onLoadMore ${state.listData.value?.length}');
-    await Future.delayed(Duration(seconds: 0, milliseconds: 600));
-    await fetchProduct();
-    return true;
-  }
-
   Future<void> refreshLoader() async {
     state.listData.clear();
     state.lastKey.value = null;
@@ -82,21 +75,22 @@ class HomeLogic extends GetxController {
     Get.log('dsakfdnk');
   }
 
-  void toggleFavorite(int? id) async {
-    Get.log('asdkflmsdk $id');
-    if (id == null) return;
-    final res = await _app.setFavorite(idRecipes: id);
-    res.fold(
-      (l) {
-        return;
-      },
-      (r) {
-        if (state.listFavorite.value.contains(id)) {
-          state.listFavorite.remove(id);
-          return;
-        }
-        state.listFavorite.add(id);
-      },
-    );
-  }
+  // void toggleFavorite(int? id) async {
+  //   Get.log('asdkflmsdk $id');
+  //   if (id == null) return;
+  //   final res =
+  //       await _app.setFavorite(idRecipes: id, userId: getUser?.uid ?? '');
+  //   res.fold(
+  //     (l) {
+  //       return;
+  //     },
+  //     (r) {
+  //       if (state.listFavorite.value.contains(id)) {
+  //         state.listFavorite.remove(id);
+  //         return;
+  //       }
+  //       state.listFavorite.add(id);
+  //     },
+  //   );
+  // }
 }

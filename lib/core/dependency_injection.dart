@@ -13,9 +13,9 @@ class DependencyInjection {
 
 
     //Module auth
-    Get.lazyPut(() => AuthRemoteDataSource());
-    Get.lazyPut(() => AuthRepository());
-    Get.lazyPut(() => AuthAppService());
+    Get.lazyPut(() => AuthRemoteDataSource(), fenix: true);
+    Get.lazyPut(() => AuthRepository(), fenix: true);
+    Get.lazyPut(() => AuthAppService(), fenix: true);
 
   }
 }

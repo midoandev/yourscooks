@@ -32,7 +32,7 @@ extension RecipesExt on Recipes {
 
   String get formatRating {
     try {
-      if (aggregatedRating == null) return '0';
+      if (aggregatedRating == null || aggregatedRating == 'NA') return '0';
       double parsedRating = double.parse(aggregatedRating!);
       return parsedRating.toString();
     } catch (e) {

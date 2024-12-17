@@ -41,17 +41,7 @@ class MainUi extends StatelessWidget {
                     title: Text("Likes"),
                   ),
                   SalomonBottomBarItem(
-                    icon: state.userProfile.value == null
-                        ? Icon(Icons.person)
-                        : SizedBox(
-                      width: 32,height: 32,
-                          child: ClipRRect(
-                              borderRadius: 100.circularRadius,
-                              child: Image.network(
-                                state.userProfile.value!.photoURL!,
-                                fit: BoxFit.cover,
-                              )),
-                        ),
+                    icon: Icon(FeatherIcons.user),
                     title: Text("Profile"),
                   ),
                 ],

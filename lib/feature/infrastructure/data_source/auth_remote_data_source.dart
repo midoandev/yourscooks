@@ -25,8 +25,17 @@ class AuthRemoteDataSource {
   }
 
   Either<dynamic, User> getUser() {
-    User? user = FirebaseAuth.instance.currentUser;
+    User? user = _api.auth.currentUser;
     if (user == null) return Left(unit);
     return Right(user);
+  }
+
+  Future<Either<dynamic, Unit>> signOut() async{
+    try {
+      await _api.auth.signOut();
+      return Right(unit);
+    } catch (e) {
+      return Left(e);
+    }
   }
 }

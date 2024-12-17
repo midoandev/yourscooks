@@ -1,19 +1,42 @@
+import 'package:dartz/dartz.dart';
 import 'package:get/get.dart';
+import 'package:yourscooks/feature/application/auth_app_service.dart';
+import 'package:yourscooks/feature/application/main_app_service.dart';
 
+import '../../login/login_ui.dart';
+import '../../splash/splash_ui.dart';
 import 'profile_state.dart';
 
 class ProfileLogic extends GetxController {
   final ProfileState state = ProfileState();
+  final _appAuth = Get.find<AuthAppService>();
+  final _app = Get.find<MainAppService>();
 
   @override
   void onReady() {
-    // TODO: implement onReady
+    fetchDataUser();
     super.onReady();
   }
 
-  @override
-  void onClose() {
-    // TODO: implement onClose
-    super.onClose();
+  Future<void> signOut() async {
+    await _appAuth.signOut();
+    Get.offAndToNamed(LoginUi.namePath);
+  }
+
+  void fetchDataUser() {
+    final userData = _appAuth.getUser();
+    userData.fold((l) => Left(l), (r) {
+      state.userProfile.value = r;
+    });
+  }
+  void changeTheme(bool isDark) async {
+    // var theme = Get.theme;
+    Get.log('dkflmskd $isDark');
+    state.isDarkMode.value = isDark;
+    state.isDarkMode.refresh();
+    // Get.changeThemeMode(value ? ThemeMode.light : ThemeMode.dark);
+    await _app.changeTheme(isDark).then((value) {
+      Get.offAllNamed(SplashUi.namePath);
+    });
   }
 }

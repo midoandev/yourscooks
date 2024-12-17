@@ -19,4 +19,8 @@ class AuthAppService {
     final res = _repository.getUser();
     return res.fold((l) => Left(l), (r) => Right(r));
   }
+  Future<Either<dynamic, Unit>> signOut() async {
+    final res = await _repository.signOut();
+    return res.fold((l) => Left(l), (r) => Right(unit));
+  }
 }

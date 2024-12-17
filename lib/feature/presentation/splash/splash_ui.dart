@@ -16,10 +16,12 @@ class SplashUi extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EasySplashScreen(
-      logoWidth: 48,
-      logo: AppImages.vector.appIcon.image(),
-      showLoader: false,
+    return Scaffold(
+      body: EasySplashScreen(
+        logoWidth: 48,
+        logo: AppImages.vector.appIcon.image(),
+        showLoader: false,
+      ),
     );
   }
 }

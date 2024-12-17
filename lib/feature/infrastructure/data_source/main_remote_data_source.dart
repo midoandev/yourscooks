@@ -48,10 +48,11 @@ class MainRemoteDataSource {
     }
   }
 
-  Future<Either<dynamic, Unit>> setFavorite({required int idRecipes}) async {
+  Future<Either<dynamic, Unit>> setFavorite(
+      {required int idRecipes, required String userId}) async {
     try {
       final userFavoritesRef = _api.favoriteDb;
-      final userRef = userFavoritesRef.child('anom');
+      final userRef = userFavoritesRef.child('userId');
       final snapshot = await userRef.once();
       List<dynamic> currentFavorites = [];
 

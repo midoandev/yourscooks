@@ -19,8 +19,9 @@ class MainRepository implements MainRepositoryBase {
   }
 
   @override
-  Future<Either<dynamic, Unit>> setFavorite({required int idRecipes}) async {
-    final res = await remote.setFavorite(idRecipes: idRecipes);
+  Future<Either<dynamic, Unit>> setFavorite(
+      {required int idRecipes, required String userId}) async {
+    final res = await remote.setFavorite(idRecipes: idRecipes, userId: userId);
     return res.fold((l) => Left(l), (r) => Right(unit));
   }
 

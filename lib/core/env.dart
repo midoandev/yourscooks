@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
 import 'package:yourscooks/core/dependency_injection.dart';
 
 import '../firebase_options.dart';
@@ -56,6 +57,8 @@ class Env {
     );
     final isDark =
         await StorageService.getPrefBool(key: StorageEnum.themeIsDark);
+    Get.log('isDarkFirst $isDark');
+
     final themeDefault = isDark ? ThemeMode.dark : ThemeMode.light;
 
     runApp(AppComponent(themeMode: themeDefault));

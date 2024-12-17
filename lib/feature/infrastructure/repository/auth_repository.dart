@@ -22,4 +22,10 @@ class AuthRepository implements AuthRepositoryBase {
     final res = remote.getUser();
     return res.fold((l) => Left(l), (r) => Right(r));
   }
+
+  @override
+  Future<Either<dynamic, Unit>> signOut() async {
+    final res = await remote.signOut();
+    return res.fold((l) => Left(l), (r) => Right(r));
+  }
 }
