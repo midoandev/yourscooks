@@ -25,5 +25,6 @@ extension NumHelper<T extends num> on T {
   get p => EdgeInsets.all(toDouble());
   get ph => EdgeInsets.symmetric(horizontal: toDouble());
   get pv => EdgeInsets.symmetric(vertical: toDouble());
-  Radius get circularRadius => Radius.circular(toDouble());
+  BorderRadius get circularRadius => BorderRadius.circular(toDouble());
+  Radius get radius => Radius.circular(toDouble());
 }
