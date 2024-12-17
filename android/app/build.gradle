@@ -1,5 +1,8 @@
 plugins {
     id "com.android.application"
+    // START: FlutterFire Configuration
+    id 'com.google.gms.google-services'
+    // END: FlutterFire Configuration
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
@@ -41,8 +44,16 @@ if (flutterTargetSdkVersion == null) {
 
 android {
     namespace = "id.mido.yourscooks"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = flutterCompileSdkVersion.toInteger()
     ndkVersion = flutter.ndkVersion
+
+    defaultConfig {
+        applicationId = "id.mido.yourscooks"
+        minSdk = flutterMinSdkVersion.toInteger()
+        targetSdk = flutterTargetSdkVersion.toInteger()
+        versionCode = flutterVersionCode.toInteger()
+        versionName = flutterVersionName
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -51,14 +62,6 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8
-    }
-
-    defaultConfig {
-        applicationId = "id.mido.yourscooks"
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
     }
 
     buildTypes {
