@@ -39,6 +39,8 @@ class Env {
   String get apiKeyIos => dotenv.env['apiKeyIos']!;
 
   String get iosBundleId => dotenv.env['iosBundleId']!;
+  String get clientIdIdIos => dotenv.env['clientIdIdIos']!;
+
   EnvType environmentType = EnvType.production;
 
   Env() {

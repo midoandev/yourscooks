@@ -24,12 +24,12 @@ class MainAppService {
     return res.fold((l) => Left(l), (r) => Right(unit));
   }
 
-  Future<Either<dynamic, Unit>> signWithGoogle(
-      {String? idToken, String? accessToken}) async {
-    final res = await _repository.signWithGoogle();
-    return res.fold((l) => Left(l), (r) => Right(unit));
+  Future<Either<dynamic, bool>> isFavorite(
+      {required int idRecipes, required String userId}) async {
+    final res =
+        await _repository.isFavorite(idRecipes: idRecipes, userId: userId);
+    return res.fold((l) => Left(l), (r) => Right(r));
   }
-
 
   Future<void> changeTheme(bool isDark) async {
     Get.changeThemeMode(isDark ? ThemeMode.dark : ThemeMode.light );

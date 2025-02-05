@@ -69,6 +69,7 @@ extension StringExtension on String {
     return replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), '');
   }
 
+  String get removeQuoteChar => trim().replaceAll('"', '');
   String replaceSubject(String name) {
     final expression = RegExp(
         r'({subject}|{{ subject }}|{{subject}}|{{subject]}?|({\[subject}})|{{subject }}|{{subject ]}|{{ subject}}|{{ Subject }}|{{Subject}}|{{Subject]}|({\[Subject}})|{{Subject }}|{{Subject ]}|{{ Subject}}|{ Subject }}|{ subject }})');

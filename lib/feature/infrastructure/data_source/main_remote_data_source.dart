@@ -3,7 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:yourscooks/utility/shared/constants/constants.dart';
 
+import '../../../core/env.dart';
 import '../../../utility/network/api_provider.dart';
 import '../models/recipes_response.dart';
 
@@ -42,7 +44,21 @@ class MainRemoteDataSource {
           .map((e) => Map<String, dynamic>.from(e as Map<Object?, Object?>))
           .toList();
       var newList = snap.map((e) => RecipesResponse.fromJson(e)).toList();
+      // final filter = newList.where((e) => e.images != 'character(0)');
       return Right(newList);
+    } catch (e) {
+      return Left(e);
+    }
+  }
+
+  Future<Either<dynamic, bool>> isFavorite(
+      {required int idRecipes, required String userId}) async {
+    try {
+      final userRef = _api.favoriteDb.child(userId);
+      final snapshot = await userRef.get();
+      if (!snapshot.exists) return Left("Not found");
+      List<dynamic> favorites = List.from(snapshot.value as List);
+      return Right(favorites.contains(idRecipes));
     } catch (e) {
       return Left(e);
     }
@@ -51,27 +67,27 @@ class MainRemoteDataSource {
   Future<Either<dynamic, Unit>> setFavorite(
       {required int idRecipes, required String userId}) async {
     try {
-      final userFavoritesRef = _api.favoriteDb;
-      final userRef = userFavoritesRef.child('userId');
-      final snapshot = await userRef.once();
-      List<dynamic> currentFavorites = [];
+      final userRef = _api.favoriteDb.child(userId);
+      final snapshot = await userRef.get();
 
-      if (snapshot.snapshot.exists) {
-        currentFavorites = snapshot.snapshot.value as List<dynamic>;
+      if (snapshot.value == null) {
+        final list = [idRecipes];
+        await userRef.set(list);
+        return Right(unit);
       }
 
-      if (currentFavorites.contains(idRecipes)) {
-        // Hapus nilai jika sudah ada
-        currentFavorites.remove(idRecipes);
-        print("Value removed: $idRecipes");
+      List<dynamic> favorites = List.from(snapshot.value as List);
+      print("Value currentFavorites: $favorites");
+      if (favorites.contains(idRecipes)) {
+        favorites.remove(idRecipes);
+        await userRef.set(favorites);
+        print("Value removed successfully.");
       } else {
-        // Tambahkan nilai jika belum ada
-        currentFavorites.add(idRecipes);
-        print("Value added: $idRecipes");
+        favorites.add(idRecipes);
+        await userRef.set(favorites);
+        print("Value not found in the array.");
       }
 
-      // Simpan data yang telah dimodifikasi
-      await userRef.set(currentFavorites);
       return Right(unit);
     } catch (e) {
       return Left(e);
@@ -80,7 +96,9 @@ class MainRemoteDataSource {
 
   Future<Either<dynamic, UserCredential>> signWithGoogle() async {
     try {
-      final googleUser = await GoogleSignIn().signIn();
+      final googleUser = await GoogleSignIn(
+        clientId: Env.value.clientIdIdIos,
+      ).signIn();
       final googleAuth = await googleUser?.authentication;
       final credit = GoogleAuthProvider.credential(
           idToken: googleAuth?.idToken, accessToken: googleAuth?.accessToken);

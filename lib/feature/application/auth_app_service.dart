@@ -15,6 +15,10 @@ class AuthAppService {
     final res = await _repository.signWithGoogle();
     return res.fold((l) => Left(l), (r) => Right(unit));
   }
+  Future<Either<dynamic, Unit>> signWithApple() async {
+    final res = await _repository.signWithApple();
+    return res.fold((l) => Left(l), (r) => Right(unit));
+  }
   Either<dynamic, User> getUser() {
     final res = _repository.getUser();
     return res.fold((l) => Left(l), (r) => Right(r));

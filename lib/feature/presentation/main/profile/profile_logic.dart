@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:yourscooks/feature/application/auth_app_service.dart';
 import 'package:yourscooks/feature/application/main_app_service.dart';
 
+import '../../../../utility/shared/functions/custom_dialog_function.dart';
 import '../../login/login_ui.dart';
 import '../../splash/splash_ui.dart';
 import 'profile_state.dart';
@@ -19,8 +20,15 @@ class ProfileLogic extends GetxController {
   }
 
   Future<void> signOut() async {
-    await _appAuth.signOut();
-    Get.offAndToNamed(LoginUi.namePath);
+    CustomDialog.showConfirmDialog(
+      'Are you sure want to logout?',
+      positiveAction: () async {
+        // await _app.logout();
+        // Get.offAllNamed(BoardingUi.namePath);
+      },
+    );
+    // await _appAuth.signOut();
+    // Get.offAllNamed(LoginUi.namePath);
   }
 
   void fetchDataUser() {
@@ -29,6 +37,7 @@ class ProfileLogic extends GetxController {
       state.userProfile.value = r;
     });
   }
+
   void changeTheme(bool isDark) async {
     // var theme = Get.theme;
     Get.log('dkflmskd $isDark');

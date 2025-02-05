@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 import 'package:yourscooks/utility/shared/utils/number_helper.dart';
-import 'package:yourscooks/utility/shared/widgets/header_widget/custom_switch.dart';
 
+import '../../../../utility/shared/functions/toasts.dart';
 import 'profile_logic.dart';
 import 'profile_state.dart';
 
@@ -92,7 +92,7 @@ class ProfileUi extends StatelessWidget {
                 icon: FeatherIcons.helpCircle,
                 title: "Help",
                 onTap: () {
-                  // Action for Logout
+                  Toasts.show('helpp');
                 },
               ),
               16.zh,
@@ -101,9 +101,7 @@ class ProfileUi extends StatelessWidget {
                 title: "Logout",
                 colorIcon: Get.theme.colorScheme.error,
                 colorText: Get.theme.colorScheme.error,
-                onTap: () {
-                  // Action for Logout
-                },
+                onTap: logic.signOut,
               ),
             ],
           ),

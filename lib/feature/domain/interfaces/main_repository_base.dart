@@ -6,6 +6,7 @@ abstract class MainRepositoryBase {
 
   Future<Either<dynamic, Unit>> setFavorite(
       {required int idRecipes, required String userId});
+  Future<Either<dynamic, bool>> isFavorite(
+      {required int idRecipes, required String userId});
 
-  Future<Either<dynamic, Unit>> signWithGoogle();
 }

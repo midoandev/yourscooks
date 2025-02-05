@@ -15,8 +15,8 @@ class RecipesResponse {
   String? keywords;
   String? recipeIngredientQuantities;
   String? recipeIngredientParts;
-  String? aggregatedRating;
-  String? reviewCount;
+  int? aggregatedRating;
+  int? reviewCount;
   double? calories;
   double? fatContent;
   double? saturatedFatContent;
@@ -26,7 +26,7 @@ class RecipesResponse {
   double? fiberContent;
   double? sugarContent;
   double? proteinContent;
-  String? recipeServings;
+  int? recipeServings;
   String? recipeYield;
   String? recipeInstructions;
 

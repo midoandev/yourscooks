@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:yourscooks/feature/presentation/login/login_binding.dart';
 import 'package:yourscooks/feature/presentation/login/login_ui.dart';
+import 'package:yourscooks/feature/presentation/main/detail_recipes/detail_recipes_binding.dart';
+import 'package:yourscooks/feature/presentation/main/detail_recipes/detail_recipes_ui.dart';
 import 'package:yourscooks/feature/presentation/main/main_binding.dart';
 import 'package:yourscooks/feature/presentation/main/main_ui.dart';
 import 'package:yourscooks/feature/presentation/splash/splash_binding.dart';
@@ -26,15 +28,21 @@ class AppRouter {
       binding: LoginBinding(),
     ),
     GetPage(
-        name: MainUi.namePath,
-        page: () => MainUi(),
-        bindings: [
-          MainBinding(),
-          HomeBinding(),
-          SearchBinding(),
-          FavoriteBinding(),
-          ProfileBinding(),
-        ],
-        transition: Transition.fadeIn),
+      name: MainUi.namePath,
+      page: () => MainUi(),
+      bindings: [
+        MainBinding(),
+        HomeBinding(),
+        SearchBinding(),
+        FavoriteBinding(),
+        ProfileBinding(),
+      ],
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: DetailRecipesUi.namePath,
+      page: () => DetailRecipesUi(),
+      binding: DetailRecipesBinding(),
+    ),
   ];
 }

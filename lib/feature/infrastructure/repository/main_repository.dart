@@ -26,24 +26,9 @@ class MainRepository implements MainRepositoryBase {
   }
 
   @override
-  Future<Either<dynamic, Unit>> signWithGoogle() async {
-    final res = await remote.signWithGoogle();
-    return res.fold((l) => Left(l), (r) => Right(unit));
+  Future<Either<dynamic, bool>> isFavorite(
+      {required int idRecipes, required String userId}) async {
+    final res = await remote.isFavorite(idRecipes: idRecipes, userId: userId);
+    return res.fold((l) => Left(l), (r) => Right(r));
   }
-
-// @override
-// Future<MainProfile> getMainInformation() async {
-//   var res = await remote.getMainInformation();
-//
-//   if (res.exists) {
-//     try {
-//       Map<String, dynamic> data = jsonDecode(jsonEncode(res.value));
-//       return MainProfile.fromJson(data);
-//     } on Exception catch (e) {
-//       Get.log('catch convert $e');
-//     }
-//     // Map<String, dynamic> val = res.value! as Map<String, dynamic>;
-//   }
-//   return MainProfile.empty();
-// }
 }

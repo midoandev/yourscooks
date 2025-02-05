@@ -2,6 +2,8 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:yourscooks/feature/application/main_app_service.dart';
+import 'package:yourscooks/feature/domain/entities/recipes.dart';
+import 'package:yourscooks/feature/presentation/main/detail_recipes/detail_recipes_ui.dart';
 import 'package:yourscooks/feature/presentation/main/main_logic.dart';
 
 import 'home_state.dart';
@@ -75,22 +77,7 @@ class HomeLogic extends GetxController {
     Get.log('dsakfdnk');
   }
 
-  // void toggleFavorite(int? id) async {
-  //   Get.log('asdkflmsdk $id');
-  //   if (id == null) return;
-  //   final res =
-  //       await _app.setFavorite(idRecipes: id, userId: getUser?.uid ?? '');
-  //   res.fold(
-  //     (l) {
-  //       return;
-  //     },
-  //     (r) {
-  //       if (state.listFavorite.value.contains(id)) {
-  //         state.listFavorite.remove(id);
-  //         return;
-  //       }
-  //       state.listFavorite.add(id);
-  //     },
-  //   );
-  // }
+  void toDetailRecipes(Recipes item) {
+    Get.toNamed(DetailRecipesUi.namePath, arguments: item);
+  }
 }
