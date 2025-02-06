@@ -2,16 +2,13 @@ import 'package:draggable_home/draggable_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:get/get.dart';
 import 'package:yourscooks/feature/domain/entities/recipes_ext.dart';
 import 'package:yourscooks/utility/shared/utils/number_helper.dart';
 import 'package:yourscooks/utility/shared/utils/string_helper.dart';
 
 import '../../../../utility/generate/assets.gen.dart';
-import '../../../../utility/shared/utils/helper_function.dart';
 import 'detail_recipes_logic.dart';
-import 'detail_recipes_state.dart';
 
 class DetailRecipesUi extends StatelessWidget {
   static const String namePath = '/detail-recipes';

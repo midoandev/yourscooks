@@ -5,6 +5,7 @@ import 'package:yourscooks/feature/application/main_app_service.dart';
 import 'package:yourscooks/feature/domain/entities/recipes.dart';
 import 'package:yourscooks/feature/presentation/main/detail_recipes/detail_recipes_ui.dart';
 import 'package:yourscooks/feature/presentation/main/main_logic.dart';
+import 'package:yourscooks/feature/presentation/main/search/search_ui.dart';
 
 import 'home_state.dart';
 
@@ -12,15 +13,16 @@ class HomeLogic extends GetxController {
   final HomeState state = HomeState();
   final _app = Get.find<MainAppService>();
 
+  var debounceTimer = Duration(milliseconds: 500);
   @override
   void onInit() {
     fetchProduct();
     super.onInit();
     state.scrollController.addListener(() {
-      // Get.log('scrollController.offset ${state.scrollController.offset}');
       state.isSliverScroll.value = state.scrollController.offset >= 150.0;
       if (state.loadingMore.isFalse) _scrollListener();
     });
+
   }
 
   User? get getUser {
@@ -77,7 +79,6 @@ class HomeLogic extends GetxController {
     Get.log('dsakfdnk');
   }
 
-  void toDetailRecipes(Recipes item) {
-    Get.toNamed(DetailRecipesUi.namePath, arguments: item);
-  }
+
+  void toSearch() => Get.toNamed(SearchUi.namePath);
 }

@@ -11,10 +11,10 @@ class MainAppService {
   final MainRepositoryBase _repository = Get.find<MainRepository>();
 
   Future<Either<dynamic, List<Recipes>>> getRecipes({String? lastKey}) async {
-    final res = await _repository.getRecipes(lastKey: lastKey);
-    return res.fold((l) => Left(l), (r) {
-      return Right(r);
-    });
+    return await _repository.getRecipes(lastKey: lastKey);
+  }
+  Future<Either<dynamic, List<Recipes>>> searchRecipes(String keyword) async {
+    return await _repository.searchRecipes(keyword);
   }
 
   Future<Either<dynamic, Unit>> setFavorite(

@@ -19,6 +19,16 @@ class MainRepository implements MainRepositoryBase {
   }
 
   @override
+  Future<Either<dynamic, List<Recipes>>> searchRecipes(String keyword) async {
+    @override
+    final res = await remote.searchRecipes(keyword);
+    return res.fold((l) => Left(l), (r) {
+      var data = r.map((e) => Recipes.fromJson(e.toJson())).toList();
+      return Right(data);
+    });
+  }
+
+  @override
   Future<Either<dynamic, Unit>> setFavorite(
       {required int idRecipes, required String userId}) async {
     final res = await remote.setFavorite(idRecipes: idRecipes, userId: userId);

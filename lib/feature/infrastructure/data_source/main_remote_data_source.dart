@@ -25,6 +25,10 @@ class MainRemoteDataSource {
   Future<Either<dynamic, List<RecipesResponse>>> getRecipes(
       {String? lastKey}) async {
     Query query = _api.recipesDb.orderByKey().limitToFirst(10);
+    // Query query = _api.recipesDb
+    //     .orderByChild('Name')
+    //     .startAt('beef')
+    //     .endAt("beef\uf8ff").limitToFirst(10);
     Get.log('lastKeyasdfs ${lastKey}');
 
     if (lastKey != null) {
@@ -105,6 +109,35 @@ class MainRemoteDataSource {
       final users = await _api.auth.signInWithCredential(credit);
       Get.log('aklsdmfkd ${users.user?.displayName} ${users.user?.photoURL}');
       return Right(users);
+    } catch (e) {
+      return Left(e);
+    }
+  }
+
+
+  Future<Either<dynamic, List<RecipesResponse>>> searchRecipes(String keyword) async {
+    // Query query = _api.recipesDb.orderByKey().limitToFirst(10);
+    final req = await _api.recipesDb
+        .orderByChild('Name')
+        .equalTo("$keyword\uf8ff").limitToFirst(10).once();
+    try {
+      final res = req.snapshot;
+      Get.log(
+          'ioujiouio ${res.value.runtimeType} isListObject=${(res.value.runtimeType == List<Object?>)}');
+
+      if (!res.exists) return Right([]);
+      // Get.log(
+      //     'ioujiouio ${res.value.runtimeType} isListObject=${(res.value.runtimeType == List<Object?>)}');
+      //
+      // var valueList = (res.value.runtimeType == List<Object?>)
+      //     ? res.value as List<Object?>
+      //     : (res.value as Map<Object?, Object?>).values.toList();
+      // List<Map<String, dynamic>> snap = valueList
+      //     .map((e) => Map<String, dynamic>.from(e as Map<Object?, Object?>))
+      //     .toList();
+      // var newList = snap.map((e) => RecipesResponse.fromJson(e)).toList();
+      // // final filter = newList.where((e) => e.images != 'character(0)');
+      return Right([]);
     } catch (e) {
       return Left(e);
     }

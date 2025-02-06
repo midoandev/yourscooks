@@ -5,6 +5,7 @@ import 'package:yourscooks/feature/presentation/main/detail_recipes/detail_recip
 import 'package:yourscooks/feature/presentation/main/detail_recipes/detail_recipes_ui.dart';
 import 'package:yourscooks/feature/presentation/main/main_binding.dart';
 import 'package:yourscooks/feature/presentation/main/main_ui.dart';
+import 'package:yourscooks/feature/presentation/main/search/search_ui.dart';
 import 'package:yourscooks/feature/presentation/splash/splash_binding.dart';
 
 import '../feature/presentation/main/favorite/favorite_binding.dart';
@@ -43,6 +44,11 @@ class AppRouter {
       name: DetailRecipesUi.namePath,
       page: () => DetailRecipesUi(),
       binding: DetailRecipesBinding(),
+    ),
+    GetPage(
+      name: SearchUi.namePath,
+      page: () => SearchUi(),
+      binding: SearchBinding(),
     ),
   ];
 }
