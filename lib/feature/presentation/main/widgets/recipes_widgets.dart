@@ -11,7 +11,7 @@ import '../detail_recipes/detail_recipes_ui.dart';
 class RecipesWidgets extends StatelessWidget {
   final Recipes item;
 
-  RecipesWidgets({super.key, required this.item});
+  const RecipesWidgets({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -47,19 +47,19 @@ class RecipesWidgets extends StatelessWidget {
                       padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                       decoration: BoxDecoration(
                           borderRadius: 7.5.circularRadius,
-                          color: Get.theme.primaryColorLight.withOpacity(.5)),
+                          color: Get.theme.primaryColorLight.withValues(alpha: .5)),
                       child: Row(
                         children: [
                           Icon(
                             FeatherIcons.clock,
-                            color: Colors.white.withOpacity(.7),
+                            color: Colors.white.withValues(alpha: .7),
                             size: 10,
                           ),
                           6.zw,
                           Text(
                             '${item.totalTimeCook} mins',
                             style: Get.textTheme.labelSmall?.copyWith(
-                                color: Colors.white.withOpacity(.7),
+                                color: Colors.white.withValues(alpha: .7),
                                 fontSize: 9),
                           ),
                         ],
@@ -72,12 +72,12 @@ class RecipesWidgets extends StatelessWidget {
                       padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                       decoration: BoxDecoration(
                           borderRadius: 7.5.circularRadius,
-                          color: Get.theme.primaryColorDark.withOpacity(.8)),
+                          color: Get.theme.primaryColorDark.withValues(alpha: .8)),
                       child: Row(
                         children: [
                           Icon(
                             Icons.star,
-                            color: Colors.yellowAccent.withOpacity(.8),
+                            color: Colors.yellowAccent.withValues(alpha: .8),
                             size: 10,
                           ),
                           3.zw,
@@ -85,7 +85,7 @@ class RecipesWidgets extends StatelessWidget {
                             item.formatRating,
                             style: Get.textTheme.labelSmall?.copyWith(
                                 fontWeight: FontWeight.w700,
-                                color: Colors.white.withOpacity(.8)),
+                                color: Colors.white..withValues(alpha: .8)),
                           ),
                         ],
                       ),
@@ -95,7 +95,7 @@ class RecipesWidgets extends StatelessWidget {
           ),
           12.zh,
           Text(
-            item.nameClean ?? '_',
+            item.nameClean,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             softWrap: false,

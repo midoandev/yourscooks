@@ -77,23 +77,23 @@ class SearchUi extends StatelessWidget {
               ),
               Obx(() {
                 return SliverPadding(
-                  padding: 16.p,
-                  sliver: SliverGrid(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 16.0,
-                      mainAxisSpacing: 16.0,
-                      childAspectRatio: 3 / 5,
-                    ),
-                    delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                        final item = state.listData[index];
-                        return RecipesWidgets(item: item);
-                      },
-                      childCount: state.listData.length, // Number of grid items
-                    ),
-                  ),
-                );
+                    padding: 16.p,
+                    sliver: SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 16.0,
+                        mainAxisSpacing: 16.0,
+                        childAspectRatio: 3 / 5,
+                      ),
+                      delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                          final item = state.listData[index];
+                          return RecipesWidgets(item: item);
+                        },
+                        childCount:
+                        state.listData.length, // Number of grid items
+                      ),
+                    ));
               }),
               SliverToBoxAdapter(
                 child: Obx(() {

@@ -2,8 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:yourscooks/feature/application/main_app_service.dart';
-import 'package:yourscooks/feature/domain/entities/recipes.dart';
-import 'package:yourscooks/feature/presentation/main/detail_recipes/detail_recipes_ui.dart';
 import 'package:yourscooks/feature/presentation/main/main_logic.dart';
 import 'package:yourscooks/feature/presentation/main/search/search_ui.dart';
 
@@ -14,15 +12,26 @@ class HomeLogic extends GetxController {
   final _app = Get.find<MainAppService>();
 
   var debounceTimer = Duration(milliseconds: 500);
+
   @override
   void onInit() {
     fetchProduct();
     super.onInit();
-    state.scrollController.addListener(() {
-      state.isSliverScroll.value = state.scrollController.offset >= 150.0;
-      if (state.loadingMore.isFalse) _scrollListener();
-    });
-
+    state.scrollController.value.addListener(
+      () async {
+        state.isSliverScroll.value =
+            state.scrollController.value.offset >= 150.0;
+        if (state.scrollController.value.position.pixels >=
+                state.scrollController.value.position.maxScrollExtent - 50 &&
+            state.loadingMore.isFalse) {
+          state.loadingMore.value = true;
+          state.loadingMore.refresh();
+          await Future.delayed(Duration(seconds: 0, milliseconds: 600));
+          await fetchProduct();
+          state.loadingMore.value = false;
+        }
+      },
+    );
   }
 
   User? get getUser {
@@ -30,15 +39,19 @@ class HomeLogic extends GetxController {
     return logicMain.state.userProfile.value;
   }
 
-  Future<void> _scrollListener() async {
-    // if (state.scrollController.offset >=
-    //         state.scrollController.position.maxScrollExtent &&
-    //     !state.scrollController.position.outOfRange) {
-    if (state.scrollController.position.extentAfter < 500) {
+  Future<void> scrollListener() async {
+    if (state.scrollController.value.position.extentAfter < 500) {
+      // if (state.scrollController.position.pixels >=
+      //     state.scrollController.position.maxScrollExtent -50) {
       state.loadingMore.value = true;
+      state.loadingMore.refresh();
       await Future.delayed(Duration(seconds: 0, milliseconds: 600));
       await fetchProduct();
       state.loadingMore.value = false;
+      // if (state.scrollController.value.hasClients) {
+      //   state.scrollController.value.jumpTo(state.scrollController.value.position.maxScrollExtent -10);
+      //   state.scrollController.refresh();
+      // }
     }
   }
 
@@ -53,24 +66,26 @@ class HomeLogic extends GetxController {
       state.hasMore.value = false;
       Left(l);
     }, (r) {
-      Get.log('sdkfmadsknfk ${r.length} isNull ${state.listData.isEmpty}');
-      if (r.isEmpty) {
+      Get.log(
+          'sdkfmadsknfk ${r.recipes.length} isNull ${state.listData.isEmpty}');
+      if (r.recipes.isEmpty) {
         state.hasMore.value = false;
         state.isRefresh.value = false;
         return;
       }
       // state.pageCount.value = state + 10;
       if (state.lastKey.value != null) {
-        state.listData.addAll(r);
+        state.listData.addAll(r.recipes);
       } else {
-        state.listData.assignAll(r);
+        state.listData.assignAll(r.recipes);
       }
       state.listData.refresh();
-      state.lastKey.value = state.listData.length.toString();
+      state.lastKey.value = r.lastDocument;
       // Get.log('recipe id=${r.last.recipeId} name=${r.last.toJson()}');
       state.isRefresh.value = false;
     });
   }
+
   Future<void> refreshLoader() async {
     state.listData.clear();
     state.lastKey.value = null;
@@ -79,6 +94,11 @@ class HomeLogic extends GetxController {
     Get.log('dsakfdnk');
   }
 
-
   void toSearch() => Get.toNamed(SearchUi.namePath);
+
+  @override
+  void dispose() {
+    state.scrollController.value.dispose();
+    super.dispose();
+  }
 }

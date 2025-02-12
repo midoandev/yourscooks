@@ -22,7 +22,7 @@ class Recipes with _$Recipes {
     @JsonKey(name: "RecipeIngredientQuantities")
     String? recipeIngredientQuantities,
     @JsonKey(name: "RecipeIngredientParts") String? recipeIngredientParts,
-    @JsonKey(name: "AggregatedRating") int? aggregatedRating,
+    @JsonKey(name: "AggregatedRating") double? aggregatedRating,
     @JsonKey(name: "ReviewCount") int? reviewCount,
     @JsonKey(name: "Calories") double? calories,
     @JsonKey(name: "FatContent") double? fatContent,

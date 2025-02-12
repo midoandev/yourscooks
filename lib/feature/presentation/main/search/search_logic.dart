@@ -52,18 +52,18 @@ class SearchLogic extends GetxController {
   void searchRecipes(String value) async {
     Get.log('dsakfdnk $value');
     state.isRefresh.value = true;
-    final res = await _app.searchRecipes(value);
+    final res = await _app.getRecipes(keyword: value);
     res.fold((l) {
       Get.log('dsafdsfs $l');
       state.listData.clear();
       state.isRefresh.value = false;
     }, (r) {
-      Get.log('sdkfmadsknfk ${r.length} isNull ${state.listData.isEmpty}');
-      if (r.isEmpty) {
+      Get.log('sdkfmadsknfk ${r.recipes.length} isNull ${state.listData.isEmpty}');
+      if (r.recipes.isEmpty) {
         state.isRefresh.value = false;
         return;
       }
-      state.listData.assignAll(r);
+      state.listData.assignAll(r.recipes);
       state.listData.refresh();
       state.isRefresh.value = false;
     });

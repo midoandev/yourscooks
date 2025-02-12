@@ -1,19 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 
 class ApiProvider {
   static final ApiProvider _instance = ApiProvider._internal();
 
   factory ApiProvider() {
-    FirebaseDatabase.instance.setPersistenceEnabled(true);
     return _instance;
   }
 
   static const pathRecipes = 'recipes';
   static const pathFavorite = 'favorites';
   FirebaseAuth auth = FirebaseAuth.instance;
-  DatabaseReference recipesDb = FirebaseDatabase.instance.ref().child(pathRecipes);
-  DatabaseReference favoriteDb = FirebaseDatabase.instance.ref().child(pathFavorite);
+  FirebaseFirestore fireStore = FirebaseFirestore.instance;
+  CollectionReference recipesDb = FirebaseFirestore.instance.collection(pathRecipes);
+  CollectionReference favoriteDb = FirebaseFirestore.instance.collection(pathFavorite);
+
+  // DatabaseReference recipesDb = FirebaseDatabase.instance.ref().child(pathRecipes);
+  // DatabaseReference favoriteDb = FirebaseDatabase.instance.ref().child(pathFavorite);
 
   // Future<void> createData(Guests data, {Function(Guests)? callGuest}) async {
   //   DatabaseReference newReference = _database.child(path).push();

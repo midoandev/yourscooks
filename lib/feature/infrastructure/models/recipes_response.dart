@@ -15,7 +15,7 @@ class RecipesResponse {
   String? keywords;
   String? recipeIngredientQuantities;
   String? recipeIngredientParts;
-  int? aggregatedRating;
+  double? aggregatedRating;
   int? reviewCount;
   double? calories;
   double? fatContent;
@@ -80,7 +80,7 @@ class RecipesResponse {
     keywords: json["Keywords"],
     recipeIngredientQuantities: json["RecipeIngredientQuantities"],
     recipeIngredientParts: json["RecipeIngredientParts"],
-    aggregatedRating: json["AggregatedRating"],
+    aggregatedRating: json["AggregatedRating"]?.toDouble(),
     reviewCount: json["ReviewCount"],
     calories: json["Calories"]?.toDouble(),
     fatContent: json["FatContent"]?.toDouble(),

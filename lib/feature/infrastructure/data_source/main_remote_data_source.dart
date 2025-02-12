@@ -1,13 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:yourscooks/utility/shared/constants/constants.dart';
 
 import '../../../core/env.dart';
 import '../../../utility/network/api_provider.dart';
-import '../models/recipes_response.dart';
 
 class MainRemoteDataSource {
   final _api = Get.find<ApiProvider>();
@@ -22,35 +20,39 @@ class MainRemoteDataSource {
     });
   }
 
-  Future<Either<dynamic, List<RecipesResponse>>> getRecipes(
-      {String? lastKey}) async {
-    Query query = _api.recipesDb.orderByKey().limitToFirst(10);
-    // Query query = _api.recipesDb
-    //     .orderByChild('Name')
-    //     .startAt('beef')
-    //     .endAt("beef\uf8ff").limitToFirst(10);
-    Get.log('lastKeyasdfs ${lastKey}');
+  Future<Either<dynamic, List<QueryDocumentSnapshot<Object?>>>> getRecipes(
+      {dynamic lastDocument, String? keyword}) async {
+    var query = _api.recipesDb
+        .orderBy('RecipeId')
+        // .where('Images', isNotEqualTo: 'character(0)')
+        .limit(10);
 
-    if (lastKey != null) {
-      query = query.startAfter(lastKey);
+    if (keyword != null) {
+      Get.log('sdlfmdlkmf $keyword');
+
+      query = _api.recipesDb
+          .where(
+            'Name',
+            isGreaterThanOrEqualTo: keyword,
+          )
+          .limit(10);
+    }
+    if (lastDocument != null) {
+      query = query.startAfterDocument(lastDocument);
     }
 
     try {
-      final res = await query.get();
-      if (!res.exists) return Right([]);
-      Get.log(
-          'ioujiouio ${res.value.runtimeType} isListObject=${(res.value.runtimeType == List<Object?>)}');
-
-      var valueList = (res.value.runtimeType == List<Object?>)
-          ? res.value as List<Object?>
-          : (res.value as Map<Object?, Object?>).values.toList();
-      List<Map<String, dynamic>> snap = valueList
-          .map((e) => Map<String, dynamic>.from(e as Map<Object?, Object?>))
-          .toList();
-      var newList = snap.map((e) => RecipesResponse.fromJson(e)).toList();
-      // final filter = newList.where((e) => e.images != 'character(0)');
-      return Right(newList);
+      final QuerySnapshot res = await query.get(GetOptions(source: Source.cache));
+      if (res.docs.isEmpty) return Right([]);
+      Get.log('dlfmslkamf ${res.docs.length}');
+      // Get.log(
+      //     'ioujiouio ${res.docs.runtimeType} isListObject=${(res.docs.runtimeType == List<Object?>)}');
+      // var valueList = res.docs.map((e) => e.data() as Map<String, dynamic>);
+      // var newList = valueList.map((e) => RecipesResponse.fromJson(e)).toList();
+      return Right(res.docs);
     } catch (e) {
+      Get.log('dlfmslkamf ${e}');
+
       return Left(e);
     }
   }
@@ -58,10 +60,10 @@ class MainRemoteDataSource {
   Future<Either<dynamic, bool>> isFavorite(
       {required int idRecipes, required String userId}) async {
     try {
-      final userRef = _api.favoriteDb.child(userId);
+      final userRef = _api.favoriteDb.where(userId);
       final snapshot = await userRef.get();
-      if (!snapshot.exists) return Left("Not found");
-      List<dynamic> favorites = List.from(snapshot.value as List);
+      if (snapshot.docs.isEmpty) return Left("Not found");
+      List<dynamic> favorites = List.from(snapshot.docs as List);
       return Right(favorites.contains(idRecipes));
     } catch (e) {
       return Left(e);
@@ -71,24 +73,24 @@ class MainRemoteDataSource {
   Future<Either<dynamic, Unit>> setFavorite(
       {required int idRecipes, required String userId}) async {
     try {
-      final userRef = _api.favoriteDb.child(userId);
+      final userRef = _api.favoriteDb.where(userId);
       final snapshot = await userRef.get();
 
-      if (snapshot.value == null) {
-        final list = [idRecipes];
-        await userRef.set(list);
+      if (snapshot.docs.isEmpty) {
+        // final list = [idRecipes];
+        // await userRef.;
         return Right(unit);
       }
 
-      List<dynamic> favorites = List.from(snapshot.value as List);
+      List<dynamic> favorites = List.from(snapshot.docs as List);
       print("Value currentFavorites: $favorites");
       if (favorites.contains(idRecipes)) {
         favorites.remove(idRecipes);
-        await userRef.set(favorites);
+        // await userRef.set(favorites);
         print("Value removed successfully.");
       } else {
         favorites.add(idRecipes);
-        await userRef.set(favorites);
+        // await userRef.set(favorites);
         print("Value not found in the array.");
       }
 
@@ -114,29 +116,24 @@ class MainRemoteDataSource {
     }
   }
 
-
-  Future<Either<dynamic, List<RecipesResponse>>> searchRecipes(String keyword) async {
+  Future<Either<dynamic, List<QueryDocumentSnapshot<Object?>>>> searchRecipes(
+      {required String keyword, DocumentSnapshot? lastDocument}) async {
     // Query query = _api.recipesDb.orderByKey().limitToFirst(10);
     final req = await _api.recipesDb
-        .orderByChild('Name')
-        .equalTo("$keyword\uf8ff").limitToFirst(10).once();
-    try {
-      final res = req.snapshot;
-      Get.log(
-          'ioujiouio ${res.value.runtimeType} isListObject=${(res.value.runtimeType == List<Object?>)}');
+        .where('Name', arrayContains: "$keyword\uf8ff")
+        .limit(10)
+        .get();
 
-      if (!res.exists) return Right([]);
-      // Get.log(
-      //     'ioujiouio ${res.value.runtimeType} isListObject=${(res.value.runtimeType == List<Object?>)}');
-      //
-      // var valueList = (res.value.runtimeType == List<Object?>)
-      //     ? res.value as List<Object?>
-      //     : (res.value as Map<Object?, Object?>).values.toList();
-      // List<Map<String, dynamic>> snap = valueList
-      //     .map((e) => Map<String, dynamic>.from(e as Map<Object?, Object?>))
-      //     .toList();
-      // var newList = snap.map((e) => RecipesResponse.fromJson(e)).toList();
-      // // final filter = newList.where((e) => e.images != 'character(0)');
+    var query =
+        _api.recipesDb.where('Images', isNotEqualTo: "character(0)").limit(10);
+
+    if (lastDocument != null) {
+      query = _api.recipesDb.startAfterDocument(lastDocument);
+    }
+
+    try {
+      final QuerySnapshot res = await query.get();
+      if (res.docs.isEmpty) return Right([]);
       return Right([]);
     } catch (e) {
       return Left(e);
