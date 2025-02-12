@@ -12,7 +12,7 @@ dependencies:
 
   get: ^4.6.6
   flutter_dotenv: ^5.2.1
-  shared_preferences: ^2.3.5
+  shared_preferences: ^2.5.2
   flex_color_scheme: ^8.1.0
   easy_splash_screen: ^1.0.4
   intl: ^0.20.0
@@ -24,9 +24,10 @@ dependencies:
   google_fonts: ^6.2.1
   font_awesome_flutter: ^10.8.0
   flutter_svg: ^2.0.10+1
-  fluttertoast: ^8.2.10
+  fluttertoast: ^8.2.11
   draggable_home: ^1.0.5
   flutter_image_slideshow: ^0.1.6
+  loadmore_listview: ^1.0.7
 
   crypto: ^3.0.6
   sign_in_with_apple: ^6.1.4
@@ -48,10 +49,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner: ^2.4.14
-  flutter_gen_runner: ^5.8.0
+  flutter_gen_runner: ^5.9.0
   flutter_lints: ^5.0.0
-  freezed: ^2.5.7
-  json_serializable: ^6.9.0
+  freezed: ^2.5.8
+  json_serializable: ^6.9.3
 
 
 
@@ -100,13 +101,9 @@ flavorizr:
 
 
 flutter_gen:
-  output: lib/utility/generate # Optional (default: lib/gen/)
-  line_length: 80
-
   # Optional
   integrations:
     flutter_svg: true
-    flare_flutter: false
     rive: false
     lottie: false
 

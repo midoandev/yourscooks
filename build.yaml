@@ -1,0 +1,11 @@
+targets:
+  $default:
+    builders:
+      build_runner:
+        enabled: true
+      json_serializable:
+        enabled: true
+      flutter_gen_runner:
+        options:
+          output: lib/utility/generate
+          line_length: 80

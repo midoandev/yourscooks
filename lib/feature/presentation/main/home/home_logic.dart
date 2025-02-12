@@ -17,21 +17,21 @@ class HomeLogic extends GetxController {
   void onInit() {
     fetchProduct();
     super.onInit();
-    state.scrollController.value.addListener(
-      () async {
-        state.isSliverScroll.value =
-            state.scrollController.value.offset >= 150.0;
-        if (state.scrollController.value.position.pixels >=
-                state.scrollController.value.position.maxScrollExtent - 50 &&
-            state.loadingMore.isFalse) {
-          state.loadingMore.value = true;
-          state.loadingMore.refresh();
-          await Future.delayed(Duration(seconds: 0, milliseconds: 600));
-          await fetchProduct();
-          state.loadingMore.value = false;
-        }
-      },
-    );
+    // state.scrollController.value.addListener(
+    //   () async {
+    //     state.isSliverScroll.value =
+    //         state.scrollController.value.offset >= 150.0;
+    //     if (state.scrollController.value.position.pixels >=
+    //             state.scrollController.value.position.maxScrollExtent - 50 &&
+    //         state.loadingMore.isFalse) {
+    //       state.loadingMore.value = true;
+    //       state.loadingMore.refresh();
+    //       await Future.delayed(Duration(seconds: 0, milliseconds: 600));
+    //       await fetchProduct();
+    //       state.loadingMore.value = false;
+    //     }
+    //   },
+    // );
   }
 
   User? get getUser {
@@ -39,20 +39,12 @@ class HomeLogic extends GetxController {
     return logicMain.state.userProfile.value;
   }
 
-  Future<void> scrollListener() async {
-    if (state.scrollController.value.position.extentAfter < 500) {
-      // if (state.scrollController.position.pixels >=
-      //     state.scrollController.position.maxScrollExtent -50) {
+  Future<void> loadMore() async {
       state.loadingMore.value = true;
       state.loadingMore.refresh();
       await Future.delayed(Duration(seconds: 0, milliseconds: 600));
       await fetchProduct();
       state.loadingMore.value = false;
-      // if (state.scrollController.value.hasClients) {
-      //   state.scrollController.value.jumpTo(state.scrollController.value.position.maxScrollExtent -10);
-      //   state.scrollController.refresh();
-      // }
-    }
   }
 
   Future<void> fetchProduct() async {
