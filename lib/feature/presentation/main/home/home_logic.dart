@@ -11,27 +11,11 @@ class HomeLogic extends GetxController {
   final HomeState state = HomeState();
   final _app = Get.find<MainAppService>();
 
-  var debounceTimer = Duration(milliseconds: 500);
 
   @override
   void onInit() {
     fetchProduct();
     super.onInit();
-    // state.scrollController.value.addListener(
-    //   () async {
-    //     state.isSliverScroll.value =
-    //         state.scrollController.value.offset >= 150.0;
-    //     if (state.scrollController.value.position.pixels >=
-    //             state.scrollController.value.position.maxScrollExtent - 50 &&
-    //         state.loadingMore.isFalse) {
-    //       state.loadingMore.value = true;
-    //       state.loadingMore.refresh();
-    //       await Future.delayed(Duration(seconds: 0, milliseconds: 600));
-    //       await fetchProduct();
-    //       state.loadingMore.value = false;
-    //     }
-    //   },
-    // );
   }
 
   User? get getUser {
@@ -88,9 +72,4 @@ class HomeLogic extends GetxController {
 
   void toSearch() => Get.toNamed(SearchUi.namePath);
 
-  @override
-  void dispose() {
-    state.scrollController.value.dispose();
-    super.dispose();
-  }
 }

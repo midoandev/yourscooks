@@ -10,9 +10,10 @@ class RecipesResponse {
   String? totalTime;
   DateTime? datePublished;
   String? description;
-  String? images;
   String? recipeCategory;
-  String? keywords;
+
+  List<String>? images;
+  List<String>? keywords;
   String? recipeIngredientQuantities;
   String? recipeIngredientParts;
   double? aggregatedRating;
@@ -75,9 +76,9 @@ class RecipesResponse {
     totalTime: json["TotalTime"],
     datePublished: json["DatePublished"] == null ? null : DateTime.parse(json["DatePublished"]),
     description: json["Description"],
-    images: json["Images"],
+    images: json["Images"] == null ? [] : List<String>.from(json["Images"]!.map((x) => x)),
+    keywords: json["Keywords"] == null ? [] : List<String>.from(json["Keywords"]!.map((x) => x)),
     recipeCategory: json["RecipeCategory"],
-    keywords: json["Keywords"],
     recipeIngredientQuantities: json["RecipeIngredientQuantities"],
     recipeIngredientParts: json["RecipeIngredientParts"],
     aggregatedRating: json["AggregatedRating"]?.toDouble(),

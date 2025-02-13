@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:yourscooks/utility/shared/utils/string_helper.dart';
 
 import '../../../core/env.dart';
 import '../../../utility/network/api_provider.dart';
@@ -28,12 +29,14 @@ class MainRemoteDataSource {
         .limit(10);
 
     if (keyword != null) {
-      Get.log('sdlfmdlkmf $keyword');
-
+      final listKeyword = keyword.split(' ');
+      final capitalKeywords = listKeyword.map((e) => e.capitalizeFirstofEach).toList();
+      List<String> fixKeyword = [...listKeyword, ...capitalKeywords];
+      Get.log('sdlfmdlkmf $fixKeyword');
       query = _api.recipesDb
           .where(
-            'Name',
-            isGreaterThanOrEqualTo: keyword,
+            'Keywords',
+            arrayContainsAny: fixKeyword,
           )
           .limit(10);
     }
@@ -42,7 +45,8 @@ class MainRemoteDataSource {
     }
 
     try {
-      final QuerySnapshot res = await query.get(GetOptions(source: Source.cache));
+      final QuerySnapshot res = await query.get();
+      Get.log('dlfmslkamf ${res.docs.length}');
       if (res.docs.isEmpty) return Right([]);
       Get.log('dlfmslkamf ${res.docs.length}');
       // Get.log(

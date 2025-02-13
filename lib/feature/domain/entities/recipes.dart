@@ -16,9 +16,9 @@ class Recipes with _$Recipes {
     @JsonKey(name: "TotalTime") String? totalTime,
     @JsonKey(name: "DatePublished") DateTime? datePublished,
     @JsonKey(name: "Description") String? description,
-    @JsonKey(name: "Images") String? images,
+    @JsonKey(name: "Images") List<String>? images,
+    @JsonKey(name: "Keywords") List<String>? keywords,
     @JsonKey(name: "RecipeCategory") String? recipeCategory,
-    @JsonKey(name: "Keywords") String? keywords,
     @JsonKey(name: "RecipeIngredientQuantities")
     String? recipeIngredientQuantities,
     @JsonKey(name: "RecipeIngredientParts") String? recipeIngredientParts,

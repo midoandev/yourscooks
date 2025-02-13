@@ -6,6 +6,7 @@ import 'package:yourscooks/feature/presentation/main/widgets/recipes_widgets.dar
 import 'package:yourscooks/utility/shared/utils/number_helper.dart';
 
 import '../../../../utility/shared/widgets/loading_load_more.dart';
+import '../../../../utility/shared/widgets/loadmore_listview.dart';
 import 'search_logic.dart';
 import 'search_state.dart';
 
@@ -22,14 +23,21 @@ class SearchUi extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         top: false,
-        child: RefreshIndicator(
-          onRefresh: logic.refreshLoader,
-          child: CustomScrollView(
+        child: Obx(() {
+          return LoadMoreListView.customScrollView(
             dragStartBehavior: DragStartBehavior.down,
-            controller: state.scrollController,
+            loadMoreWidget: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(child: LoadingLoadMore()),
+            ),
+            onLoadMore: logic.loadMore,
+            onRefresh: logic.refreshLoader,
+            refreshBackgroundColor: Get.theme.canvasColor,
+            refreshColor: Get.theme.primaryColor,
+            hasMoreItem: state.hasMore.value,
             slivers: [
               SliverAppBar(
-                expandedHeight: 185.0,
+                pinned: true,
                 title: Container(
                   height: 40,
                   decoration: BoxDecoration(
@@ -48,7 +56,7 @@ class SearchUi extends StatelessWidget {
                       Expanded(
                         child: TextField(
                           autofocus: true,
-                          onSubmitted: logic.searchRecipes,
+                          onSubmitted: logic.searchProduct,
                           decoration: InputDecoration(
                             filled: false,
                             constraints: BoxConstraints(maxHeight: 40),
@@ -75,6 +83,25 @@ class SearchUi extends StatelessWidget {
                           color: Get.theme.primaryColor))
                 ],
               ),
+              SliverToBoxAdapter(child: Obx(() {
+                return Visibility(
+                    visible: state.searchText.value.isNotEmpty && state.isRefresh.value,
+                    child: Padding(
+                      padding: 16.p,
+                      child: Center(child: LoadingLoadMore()),
+                    ));
+              })),
+              SliverToBoxAdapter(child: Obx(() {
+                return Visibility(
+                    visible: state.listData.isEmpty && state.searchText.isNotEmpty,
+                    child: Padding(
+                      padding: 16.p,
+                      child: Center(child: Text(
+                        '${state.searchText.value} Not found',
+                        style: Get.textTheme.bodySmall,
+                      )),
+                    ));
+              })),
               Obx(() {
                 return SliverPadding(
                     padding: 16.p,
@@ -86,29 +113,17 @@ class SearchUi extends StatelessWidget {
                         childAspectRatio: 3 / 5,
                       ),
                       delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
+                        (BuildContext context, int index) {
                           final item = state.listData[index];
                           return RecipesWidgets(item: item);
                         },
-                        childCount:
-                        state.listData.length, // Number of grid items
+                        childCount: state.listData.length,
                       ),
                     ));
               }),
-              SliverToBoxAdapter(
-                child: Obx(() {
-                  return Visibility(
-                    visible: state.loadingMore.value,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Center(child: LoadingLoadMore()),
-                    ),
-                  );
-                }),
-              ),
             ],
-          ),
-        ),
+          );
+        }),
       ),
     );
   }

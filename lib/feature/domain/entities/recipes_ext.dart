@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import 'package:yourscooks/feature/domain/entities/recipes.dart';
 import 'package:yourscooks/utility/shared/utils/string_helper.dart';
 
@@ -37,11 +36,12 @@ extension RecipesExt on Recipes {
     return cleanResult;
   }
 
-  List<String> get listImage {
-    return textToList(textList: images);
-  }
 
-  String get imagesFirst => listImage.isEmpty ? '' : listImage.first.removeQuoteChar;
+  String get imagesFirst {
+    if (images == null) return '';
+    if (images!.isEmpty) return '';
+    return images!.first;
+  }
 
   List<String> get listIngredientQuantities {
     return textToList(textList: recipeIngredientQuantities);

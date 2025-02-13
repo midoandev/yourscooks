@@ -2,10 +2,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
-import 'package:loadmore_listview/loadmore_listview.dart';
 import 'package:yourscooks/utility/shared/utils/number_helper.dart';
 
 import '../../../../utility/shared/widgets/loading_load_more.dart';
+import '../../../../utility/shared/widgets/loadmore_listview.dart';
 import '../widgets/recipes_widgets.dart';
 import 'home_logic.dart';
 import 'home_state.dart';
@@ -21,18 +21,18 @@ class HomeUi extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         top: false,
-        child: RefreshIndicator(
-          onRefresh: logic.refreshLoader,
-          child: LoadMoreListView.customScrollView(
+        child: Obx(() {
+          return LoadMoreListView.customScrollView(
             dragStartBehavior: DragStartBehavior.down,
-            controller: state.scrollController.value,
             loadMoreWidget: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Center(child: LoadingLoadMore()),
             ),
-            onLoadMore:logic.loadMore,
-            //pull down refresh callback
+            onLoadMore: logic.loadMore,
             onRefresh: logic.refreshLoader,
+            refreshBackgroundColor: Get.theme.canvasColor,
+            refreshColor: Get.theme.primaryColor,
+            hasMoreItem: state.hasMore.value,
             slivers: [
               SliverAppBar(
                 onStretchTrigger: () {
@@ -109,8 +109,8 @@ class HomeUi extends StatelessWidget {
                               "Hello, ",
                               style: Get.textTheme.labelLarge!.copyWith(
                                   letterSpacing: 2,
-                                  color:
-                                      Get.theme.dividerColor.withValues(alpha: .6)),
+                                  color: Get.theme.dividerColor
+                                      .withValues(alpha: .6)),
                             ),
                             Obx(() {
                               return Text(
@@ -176,29 +176,37 @@ class HomeUi extends StatelessWidget {
                   ),
                 ),
               ),
+              SliverToBoxAdapter(child: Obx(() {
+                return Visibility(
+                    visible: state.listData.isEmpty && state.isRefresh.value,
+                    child: Padding(
+                      padding: 16.p,
+                      child: Center(child: LoadingLoadMore()),
+                    ));
+              })),
               Obx(() {
                 return SliverPadding(
-                  padding: 16.p,
-                  sliver: SliverGrid(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 16.0,
-                      mainAxisSpacing: 16.0,
-                      childAspectRatio: 3 / 5,
-                    ),
-                    delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                        final item = state.listData[index];
-                        return RecipesWidgets(item: item);
-                      },
-                      childCount: state.listData.length, // Number of grid items
-                    ),
-                  ),
-                );
-              }),
+                    padding: 16.p,
+                    sliver: SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 16.0,
+                        mainAxisSpacing: 16.0,
+                        childAspectRatio: 3 / 5,
+                      ),
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          final item = state.listData[index];
+                          return RecipesWidgets(item: item);
+                        },
+                        childCount:
+                            state.listData.length, // Number of grid items
+                      ),
+                    ));
+              })
             ],
-          ),
-        ),
+          );
+        }),
       ),
     );
   }

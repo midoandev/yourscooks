@@ -16,7 +16,9 @@ class DetailRecipesUi extends StatelessWidget {
   DetailRecipesUi({super.key});
 
   final logic = Get.put(DetailRecipesLogic());
-  final state = Get.find<DetailRecipesLogic>().state;
+  final state = Get
+      .find<DetailRecipesLogic>()
+      .state;
 
   @override
   Widget build(BuildContext context) {
@@ -31,16 +33,12 @@ class DetailRecipesUi extends StatelessWidget {
           ),
           actions: [
             IconButton(
-              onPressed: logic.backPress,
-              icon: Obx(() {
-                return Icon(
+                onPressed: logic.backPress,
+                icon: Icon(
                   Icons.favorite_outlined,
-                  color: state.isFavorite.value
-                      ? Get.theme.primaryColor
-                      : Get.theme.disabledColor,
+                  color: Get.theme.primaryColor,
                   size: 20,
-                );
-              }),
+                )
             )
           ],
           title: SizedBox(),
@@ -52,33 +50,35 @@ class DetailRecipesUi extends StatelessWidget {
   Widget headerWidget() {
     return Stack(
       children: [
-        Visibility(
-          visible: (state.recipes.value?.listImage.length ?? 0) > 1,
-          replacement: SizedBox(
-              height: 400,
+        Obx(() {
+          return Visibility(
+            visible: (state.recipes.value?.images?.length ?? 0) > 0,
+            replacement: SizedBox(
+                height: 400,
+                width: double.infinity,
+                child: AppImages.vector.appIcon.image()),
+            child: ImageSlideshow(
               width: double.infinity,
-              child: AppImages.vector.appIcon.image()),
-          child: ImageSlideshow(
-            width: double.infinity,
-            height: 400,
-            indicatorBottomPadding: 32,
-            initialPage: 0,
-            indicatorColor: Get.theme.primaryColor,
-            indicatorBackgroundColor: Get.theme.colorScheme.onInverseSurface,
-            autoPlayInterval: 3000,
-            isLoop: (state.recipes.value?.listImage.length ?? 0) > 1,
-            children: state.recipes.value?.listImage.map((stringUrl) {
-                  return Image.network(
-                    stringUrl.removeQuoteChar,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return AppImages.vector.appIcon.image();
-                    },
-                  );
-                }).toList() ??
-                [AppImages.vector.appIcon.image()],
-          ),
-        ),
+              height: 400,
+              indicatorBottomPadding: 32,
+              initialPage: 0,
+              indicatorColor: Get.theme.primaryColor,
+              indicatorBackgroundColor: Get.theme.colorScheme.onInverseSurface,
+              autoPlayInterval: 3000,
+              isLoop: (state.recipes.value?.images?.length ?? 0) > 1,
+              children: state.recipes.value?.images?.map((stringUrl) {
+                return Image.network(
+                  stringUrl.removeQuoteChar,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return AppImages.vector.appIcon.image();
+                  },
+                );
+              }).toList() ??
+                  [AppImages.vector.appIcon.image()],
+            ),
+          );
+        }),
         // Top Icons
         Positioned(
           top: 40,
@@ -86,7 +86,6 @@ class DetailRecipesUi extends StatelessWidget {
           child: GestureDetector(
             onTap: logic.backPress,
             child: CircleAvatar(
-              backgroundColor: Colors.white,
               child: Icon(
                 FeatherIcons.arrowLeft,
                 color: Get.theme.primaryColor,
@@ -100,7 +99,6 @@ class DetailRecipesUi extends StatelessWidget {
           child: GestureDetector(
             onTap: logic.toggleFavorite,
             child: CircleAvatar(
-                backgroundColor: Colors.white,
                 child: Obx(() {
                   return Icon(
                     Icons.favorite_outlined,
@@ -238,9 +236,9 @@ class DetailRecipesUi extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: List.generate(
                 state.recipes.value?.listIngredientParts.length ?? 0,
-                (index) {
+                    (index) {
                   final quantities =
-                      state.recipes.value?.listIngredientQuantities[index];
+                  state.recipes.value?.listIngredientQuantities[index];
                   final parts = state.recipes.value?.listIngredientParts[index];
                   return _textListItem('$quantities $parts');
                 },
@@ -258,9 +256,9 @@ class DetailRecipesUi extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: state.recipes.value?.listInstruction.map(
                   (e) {
-                    return _textListItem(e);
-                  },
-                ).toList() ??
+                return _textListItem(e);
+              },
+            ).toList() ??
                 [],
           ),
         ],
@@ -273,14 +271,14 @@ class DetailRecipesUi extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 24,
-          backgroundColor: Get.theme.primaryColorDark.withOpacity(.7),
+          backgroundColor: Get.theme.primaryColorDark.withValues(alpha: .7),
           child: Icon(icon, color: Colors.white, size: 20),
         ),
         8.zh,
         Text(
           value ?? '',
           style: Get.textTheme.bodyLarge?.copyWith(
-              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+              fontSize: 16, fontWeight: FontWeight.bold),
         ),
         Text(
           unit ?? '',
@@ -302,7 +300,7 @@ class DetailRecipesUi extends StatelessWidget {
           child: Text(
             text.trim(),
             style: Get.textTheme.bodyLarge
-                ?.copyWith(fontSize: 14, color: Colors.black87),
+                ?.copyWith(fontSize: 14),
           ),
         ),
       ],

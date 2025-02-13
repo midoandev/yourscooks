@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,8 +9,11 @@ class SearchState {
   var listData = <Recipes>[].obs;
   var searchText = ''.obs;
 
-  var scrollController = ScrollController();
 
   var loadingMore = false.obs;
+
+  var lastKey = Rxn<DocumentSnapshot>();
+
+  var hasMore = true.obs;
 
 }
