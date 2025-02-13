@@ -28,6 +28,7 @@ class HomeUi extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Center(child: LoadingLoadMore()),
             ),
+            controller: state.scrollController,
             onLoadMore: logic.loadMore,
             onRefresh: logic.refreshLoader,
             refreshBackgroundColor: Get.theme.canvasColor,
