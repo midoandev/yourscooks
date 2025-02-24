@@ -9,7 +9,8 @@ extension RecipesExt on Recipes {
     final match = regex.firstMatch(time ?? '');
 
     if (match == null) {
-      throw FormatException("Invalid time format: $time");
+      // throw FormatException("Invalid time format: $time");
+      return '';
     }
 
     // Ambil nilai jam dan menit, default ke 0 jika null

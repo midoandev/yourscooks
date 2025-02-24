@@ -9,11 +9,14 @@ class ApiProvider {
   }
 
   static const pathRecipes = 'recipes';
+  static const pathReviews = 'reviews';
   static const pathFavorite = 'favorites';
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
   CollectionReference recipesDb = FirebaseFirestore.instance.collection(pathRecipes);
+  CollectionReference reviewsDb = FirebaseFirestore.instance.collection(pathReviews);
   CollectionReference favoriteDb = FirebaseFirestore.instance.collection(pathFavorite);
+  CollectionReference favoriteSubDb = FirebaseFirestore.instance.collection(pathFavorite);
 
   // DatabaseReference recipesDb = FirebaseDatabase.instance.ref().child(pathRecipes);
   // DatabaseReference favoriteDb = FirebaseDatabase.instance.ref().child(pathFavorite);

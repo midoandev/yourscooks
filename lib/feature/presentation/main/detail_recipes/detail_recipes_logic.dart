@@ -14,6 +14,7 @@ class DetailRecipesLogic extends GetxController {
   void onInit() {
     fetchDataUser();
     fetchIsFavorite();
+    fetchReview();
     Get.log('onready detail');
     super.onInit();
   }
@@ -33,7 +34,7 @@ class DetailRecipesLogic extends GetxController {
     Get.log('asdkflmsdk $id');
     if (id == null) return;
     final res = await _app.setFavorite(
-        idRecipes: id, userId: state.userProfile.value?.uid ?? '');
+        recipe: state.recipes.value!, userId: state.userProfile.value?.uid ?? '');
     res.fold(
       (l) {
         Get.log('leftToggleFavorite $l');
@@ -60,6 +61,16 @@ class DetailRecipesLogic extends GetxController {
     userData.fold((l) => Left(l), (r) {
       state.isFavorite.value = r;
       state.isFavorite.refresh();
+    });
+  }
+
+  void fetchReview() async {
+    final req = await _app.getReviews(
+        recipeId: state.recipes.value?.recipeId.toString() ?? '');
+    req.fold((l) {
+      Get.log('dsklfmkd $l');
+    }, (r) {
+      Get.log('dlksmfkdl ${r.reviews.map((e) => e.authorName)}');
     });
   }
 }

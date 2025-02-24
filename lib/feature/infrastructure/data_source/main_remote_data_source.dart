@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yourscooks/utility/shared/utils/string_helper.dart';
 
-import '../../../core/env.dart';
 import '../../../utility/network/api_provider.dart';
+import '../../domain/entities/recipes.dart';
+import '../models/recipes_response.dart';
 
 class MainRemoteDataSource {
   final _api = Get.find<ApiProvider>();
@@ -30,7 +29,8 @@ class MainRemoteDataSource {
 
     if (keyword != null) {
       final listKeyword = keyword.split(' ');
-      final capitalKeywords = listKeyword.map((e) => e.capitalizeFirstofEach).toList();
+      final capitalKeywords =
+          listKeyword.map((e) => e.capitalizeFirstofEach).toList();
       List<String> fixKeyword = [...listKeyword, ...capitalKeywords];
       Get.log('sdlfmdlkmf $fixKeyword');
       query = _api.recipesDb
@@ -55,7 +55,31 @@ class MainRemoteDataSource {
       // var newList = valueList.map((e) => RecipesResponse.fromJson(e)).toList();
       return Right(res.docs);
     } catch (e) {
-      Get.log('dlfmslkamf ${e}');
+      Get.log('dlfmslkamf $e');
+
+      return Left(e);
+    }
+  }
+
+  Future<Either<dynamic, List<QueryDocumentSnapshot<Object?>>>> getReviews(
+      {required String recipeId,
+      DocumentSnapshot<Object?>? lastDocument}) async {
+    var query = _api.recipesDb.where('recipeId', isEqualTo: recipeId).limit(10);
+    if (lastDocument != null) {
+      query = query.startAfterDocument(lastDocument);
+    }
+
+    try {
+      final QuerySnapshot res = await query.get();
+      Get.log('reviese ${res.docs.length}');
+      if (res.docs.isEmpty) return Right([]);
+      // Get.log(
+      //     'ioujiouio ${res.docs.runtimeType} isListObject=${(res.docs.runtimeType == List<Object?>)}');
+      // var valueList = res.docs.map((e) => e.data() as Map<String, dynamic>);
+      // var newList = valueList.map((e) => RecipesResponse.fromJson(e)).toList();
+      return Right(res.docs);
+    } catch (e) {
+      Get.log('reviese $e');
 
       return Left(e);
     }
@@ -64,82 +88,75 @@ class MainRemoteDataSource {
   Future<Either<dynamic, bool>> isFavorite(
       {required int idRecipes, required String userId}) async {
     try {
-      final userRef = _api.favoriteDb.where(userId);
-      final snapshot = await userRef.get();
-      if (snapshot.docs.isEmpty) return Left("Not found");
-      List<dynamic> favorites = List.from(snapshot.docs as List);
-      return Right(favorites.contains(idRecipes));
+      // final userRef = _api.favoriteDb.where(userId);
+      final reqFavorites =
+          await _api.favoriteDb.doc(userId).collection(userId).get();
+      Get.log('isFavorite ${reqFavorites.docs.isNotEmpty}');
+      if (reqFavorites.docs.isNotEmpty) {
+        var valueList = reqFavorites.docs.map((e) => e.data());
+        // var valueList = reqFavorites.data() as Map<String, dynamic>;
+        var data = valueList.map((e) => RecipesResponse.fromJson(e)).toList();
+        final isExist =
+            data.any((element) => element.recipeId == idRecipes);
+        if (isExist) {}
+      }
+      return Right(false);
     } catch (e) {
       return Left(e);
     }
   }
 
   Future<Either<dynamic, Unit>> setFavorite(
-      {required int idRecipes, required String userId}) async {
+      {required Recipes recipeObject, required String userId}) async {
+    // final userId = 'kjsdnjf324';
     try {
-      final userRef = _api.favoriteDb.where(userId);
-      final snapshot = await userRef.get();
+      final reqFavorites =
+          await _api.favoriteDb.orderBy(userId).get();
+      // Get.log('dslfmlkdsm ${reqFavorites.docs.length}');
+      if (reqFavorites.docs.isNotEmpty) {
 
-      if (snapshot.docs.isEmpty) {
-        // final list = [idRecipes];
-        // await userRef.;
+        final dataDocs = reqFavorites.docs.map((e) => e.data() as Map<String, dynamic>);
+        var valueList = dataDocs.first.values.first as List;
+        var data = valueList.map((e) => RecipesResponse.fromJson(e)).toList();
+
+        Get.log('dslfmlkdsm ${data.map((e) => e.name)}');
+        final isExist =
+            data.any((element) => element.recipeId == recipeObject.recipeId);
+        if (isExist) {
+          final newList =
+              data.where((element) => element.recipeId != recipeObject.recipeId);
+          // Get.log('dslfmlkdsmfsdf ${newList.map((e) => e.name)}');
+          await _api.favoriteDb.doc(userId).update({userId: newList.map((e) => e.toJson())});
+        } else {
+          await _api.favoriteDb.doc(userId).set({
+            userId: FieldValue.arrayUnion([recipeObject.toJson()])
+          }, SetOptions(merge: true));
+        }
         return Right(unit);
       }
-
-      List<dynamic> favorites = List.from(snapshot.docs as List);
-      print("Value currentFavorites: $favorites");
-      if (favorites.contains(idRecipes)) {
-        favorites.remove(idRecipes);
-        // await userRef.set(favorites);
-        print("Value removed successfully.");
-      } else {
-        favorites.add(idRecipes);
-        // await userRef.set(favorites);
-        print("Value not found in the array.");
-      }
-
+      await _api.favoriteDb.doc(userId).set({
+        userId: FieldValue.arrayUnion([recipeObject.toJson()])
+      }, SetOptions(merge: true));
       return Right(unit);
     } catch (e) {
       return Left(e);
     }
   }
 
-  Future<Either<dynamic, UserCredential>> signWithGoogle() async {
-    try {
-      final googleUser = await GoogleSignIn(
-        clientId: Env.value.clientIdIdIos,
-      ).signIn();
-      final googleAuth = await googleUser?.authentication;
-      final credit = GoogleAuthProvider.credential(
-          idToken: googleAuth?.idToken, accessToken: googleAuth?.accessToken);
-      final users = await _api.auth.signInWithCredential(credit);
-      Get.log('aklsdmfkd ${users.user?.displayName} ${users.user?.photoURL}');
-      return Right(users);
-    } catch (e) {
-      return Left(e);
-    }
-  }
-
-  Future<Either<dynamic, List<QueryDocumentSnapshot<Object?>>>> searchRecipes(
-      {required String keyword, DocumentSnapshot? lastDocument}) async {
-    // Query query = _api.recipesDb.orderByKey().limitToFirst(10);
-    final req = await _api.recipesDb
-        .where('Name', arrayContains: "$keyword\uf8ff")
-        .limit(10)
-        .get();
-
-    var query =
-        _api.recipesDb.where('Images', isNotEqualTo: "character(0)").limit(10);
-
-    if (lastDocument != null) {
-      query = _api.recipesDb.startAfterDocument(lastDocument);
-    }
-
+  Future<Either<dynamic, List<RecipesResponse>>> getFavorites(
+      {required String userId}) async {
+    Get.log('userID $userId');
+    var query = _api.favoriteDb.orderBy(userId).limit(25);
     try {
       final QuerySnapshot res = await query.get();
+      Get.log('favorites ${res.docs}');
       if (res.docs.isEmpty) return Right([]);
-      return Right([]);
+      final dataDocs = res.docs.map((e) => e.data() as Map<String, dynamic>);
+      var valueList = dataDocs.first.values.first as List;
+      var newList = valueList.map((e) => RecipesResponse.fromJson(e)).toList();
+      return Right(newList);
     } catch (e) {
+      Get.log('reviese $e');
       return Left(e);
     }
   }
