@@ -38,16 +38,6 @@ Yours Cooks adalah aplikasi mobile berbasis Flutter yang dirancang khusus untuk 
 1. Buka aplikasi Yours Cooks.
 2. Buat akun atau masuk jika sudah memiliki akun.
 3. Jelajahi fitur yang tersedia sesuai kebutuhan.
-4. Atur preferensi dan jadwal pengingat.
-
-## Kontribusi
-Kami menyambut kontribusi dari komunitas! Jika ingin berkontribusi:
-1. Fork repositori.
-2. Buat branch baru untuk fitur atau perbaikan yang ingin Anda tambahkan.
-3. Kirim pull request dengan deskripsi yang jelas.
-
-## Lisensi
-Proyek ini dilisensikan di bawah MIT License. Silakan lihat file `LICENSE` untuk detail lebih lanjut.
 
 
 Screen recorder
